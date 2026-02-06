@@ -197,18 +197,18 @@ func (s *Scanner) mockScan() []Network {
 		{"xfinitywifi", "B0:C7:45:3A:91:DE", "OPEN", -42, 2437},
 		{"FBI_Surveillance_Van_7", "C8:3A:35:FF:02:11", "WPA3", -48, 5240},
 		{"Pretty Fly for a WiFi", "D4:01:C3:7E:A8:55", "WPA2", -55, 2412},
-		{"The LAN Before Time", "E2:F9:4D:6B:33:C7", "WPA2", -58, 2462},
-		{"Bill Wi the Science Fi", "F6:88:1A:CE:47:9B", "WPA2/WPA", -63, 2427},
-		{"DROP TABLE *;--", "00:DE:AD:BE:EF:00", "WPA2", -65, 5300},
-		{"Skynet Global Defense", "11:22:33:44:55:66", "WPA3", -68, 5500},
-		{"404 Network Unavail", "AA:BB:CC:DD:EE:01", "WPA2", -72, 2452},
+		{"The LAN Before Time", "10:68:3F:6B:33:C7", "WPA2", -58, 2462},
+		{"Bill Wi the Science Fi", "28:C6:8E:CE:47:9B", "WPA2/WPA", -63, 2427},
+		{"DROP TABLE *;--", "00:0E:8E:BE:EF:00", "WPA2", -65, 5300},
+		{"Skynet Global Defense", "00:09:0F:44:55:66", "WPA3", -68, 5500},
+		{"404 Network Unavail", "AC:67:06:DD:EE:01", "WPA2", -72, 2452},
 		{"wu-tang LAN", "34:A1:F7:8C:22:D0", "WPA2", -74, 2417},
-		{"<hidden>", "56:78:9A:BC:DE:F0", "WPA2", -76, 5220},
+		{"<hidden>", "B4:FB:E4:BC:DE:F0", "WPA2", -76, 5220},
 		{"linksys", "78:A0:51:3E:C9:44", "WEP", -78, 2422},
 		{"DIRECT-roku-123", "9C:B2:E4:16:F8:73", "WPA2", -82, 2447},
-		{"HP-Print-A1-Officejet", "BE:CD:EF:01:23:45", "OPEN", -85, 2432},
+		{"HP-Print-A1-Officejet", "B0:5A:DA:01:23:45", "OPEN", -85, 2432},
 		{"oldrouter", "D0:E1:F2:03:14:25", "OPEN", -88, 2442},
-		{"TP-Link_Guest_5G", "E2:F3:04:15:26:37", "WPA2", -91, 5745},
+		{"TP-Link_Guest_5G", "50:C7:BF:15:26:37", "WPA2", -91, 5745},
 	}
 
 	networks := make([]Network, len(mocks))
@@ -225,6 +225,19 @@ func (s *Scanner) mockScan() []Network {
 			Security:  m.security,
 			LastSeen:  now,
 		}
+	}
+
+	// Occasional roaming network to exercise new-network alerts (~30% chance)
+	if rand.Intn(10) < 3 {
+		networks = append(networks, Network{
+			BSSID:     "A4:77:33:AB:CD:EF",
+			SSID:      "GoogleGuest-5G",
+			Signal:    -60 + rand.Intn(7) - 3,
+			Frequency: 5500,
+			Channel:   freqToChannel(5500),
+			Security:  "WPA2",
+			LastSeen:  now,
+		})
 	}
 
 	sort.Slice(networks, func(i, j int) bool {
