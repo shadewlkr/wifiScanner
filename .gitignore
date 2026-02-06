@@ -1,0 +1,13 @@
+# Binary
+spectr-scan
+wifiscanner
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
