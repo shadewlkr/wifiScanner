@@ -106,10 +106,12 @@ func parseScanOutput(output string) []Network {
 		// BSSID (first 17 chars of the block: aa:bb:cc:dd:ee:ff)
 		if m := regexp.MustCompile(`^([0-9a-fA-F:]{17})`).FindStringSubmatch(block); len(m) > 1 {
 			n.BSSID = strings.ToUpper(m[1])
+		} else {
+			continue // Not a real BSS block (e.g. "BSS Load:" split artifact)
 		}
 
 		// SSID
-		if m := regexp.MustCompile(`(?m)^\s+SSID:\s*(.*)$`).FindStringSubmatch(block); len(m) > 1 {
+		if m := regexp.MustCompile(`(?m)^[ \t]+SSID:[ \t]*(.*)$`).FindStringSubmatch(block); len(m) > 1 {
 			n.SSID = strings.TrimSpace(m[1])
 		}
 		if n.SSID == "" {
